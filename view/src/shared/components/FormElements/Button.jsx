@@ -14,7 +14,12 @@ const Button = (props) => {
     </Link>;
   }
   return (
-    <button className={`button`} type={props.type} onClick={props.onClick}>
+    <button
+      className="border border-gray-500 cursor-pointer py-2 px-3"
+      type={props.type}
+      onClick={props.onClick}
+      disabled={props.disabled}
+    >
       {props.children}
     </button>
   );
