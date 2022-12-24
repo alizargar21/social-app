@@ -50,6 +50,7 @@ const Input = (props) => {
         placeholder={props.placeholder}
         onBlur={blurHandler}
         onChange={changeHandler}
+        className={props.className}
       />
     ) : (
       <textarea
@@ -59,12 +60,14 @@ const Input = (props) => {
         value={inputState.value}
         onBlur={blurHandler}
         onChange={changeHandler}
+        className={props.className}
+
       />
     );
   return (
-    <div className={`form-control`}>
+    <div className="min-w-[200px] text-center">
       {element}
-      {!inputState.isValid && inputState.isBlurred && <p>{props.errorText}</p>}
+      {!inputState.isValid && inputState.isBlurred && <p className="text-red-500">{props.errorText}</p>}
     </div>
   );
 };

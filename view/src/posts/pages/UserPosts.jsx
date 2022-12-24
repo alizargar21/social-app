@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import Layout from "../../shared/layout/layout";
 import PostList from "../components/PostList";
 const posts = [
   {
@@ -20,7 +21,11 @@ const posts = [
 const UserPosts = () => {
     const  userId = useParams().userId
     const loadedPosts = posts.filter(post => post.creator === userId)
-    return <PostList items={loadedPosts} />;
+    return (
+      <Layout >
+        <PostList items={loadedPosts} />
+      </Layout>
+    );
 };
 
 export default UserPosts;

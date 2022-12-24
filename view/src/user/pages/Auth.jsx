@@ -4,6 +4,7 @@ import { useState } from "react";
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
 import { useForm } from "../../shared/hooks/form-hooks";
+import Layout from "../../shared/layout/layout";
 import { useAuth, useAuthDispatcher } from "../../shared/Provider/AuthProvider";
 import { validatorRequire } from "../../shared/utils/validators";
 
@@ -56,19 +57,21 @@ const Auth = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
   return (
+    <Layout>
+
     <div>
       <form onSubmit={authSubmitHandler}>
         {!isLoginMode && (
           <Input
-            id="name"
-            type="text"
-            element="input"
-            placeholder="Name"
+          id="name"
+          type="text"
+          element="input"
+          placeholder="Name"
             validators={[validatorRequire()]}
             errorText="enter a Valid Name"
             onInput={inputHandler}
-          />
-        )}
+            />
+            )}
         <Input
           id="email"
           type="email"
@@ -77,7 +80,7 @@ const Auth = () => {
           errorText="Enter a valid Email"
           validators={[validatorRequire()]}
           onInput={inputHandler}
-        />
+          />
         <Input
           id="password"
           type="password"
@@ -86,8 +89,8 @@ const Auth = () => {
           errorText="Enter a valid Password"
           validators={[validatorRequire()]}
           onInput={inputHandler}
-        />
-        <Button type="submit" disabled={!formState.isValid}>
+          />
+        <Button type="submit" disabled={!formState.isValid} className="rounded cursor-pointer py-2 px-3 bg-green-500 text-white font-semibold">
           {isLoginMode ? "Login" : "Signup"}
         </Button>
         <Button onClick={switchModeHandler} disabled={!formState.isValid}>
@@ -95,6 +98,7 @@ const Auth = () => {
         </Button>
       </form>
     </div>
+          </Layout>
   );
 };
 

@@ -3,19 +3,19 @@ import { Link } from "react-router-dom";
 const Button = (props) => {
   if (props.href) {
     return (
-      <a className={`button`} href={props.href}>
+      <a className={props.className} href={props.href}>
         {props.href}
       </a>
     );
   }
   if (props.to) {
-    <Link to={props.to} className={`button`}>
+    <Link to={props.to} className={props.className}>
       {props.children}
     </Link>;
   }
   return (
     <button
-      className="border border-gray-500 cursor-pointer py-2 px-3"
+      className={props.className}
       type={props.type}
       onClick={props.onClick}
       disabled={props.disabled}
