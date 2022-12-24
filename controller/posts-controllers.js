@@ -1,5 +1,5 @@
 const HttpError = require("../models/http-model");
-
+const {validationResult} = require("express-validator")
 let posts = [
     {
       id: "p1",
@@ -29,6 +29,10 @@ const getPostByUserId = (req, res, next) => {
   res.json({ post });
 };
 const createPost = (req, res, next) => {
+  const errors = validationResult(req)
+  if(!errors.isEmpty()){
+    throw new HttpError("Invalid Inputs" , 422)
+  }
   const { title, description, creator } = req.body;
   const createdPost = {
     title : title ,
