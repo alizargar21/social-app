@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose")
+// mongoose.set("strictQuery" ,false)
 const HttpError = require("./models/http-model");
 const postsRoutes = require("./routes/posts-routes");
 const usersRoutes = require("./routes/users-routes")
@@ -23,5 +25,11 @@ app.use((error, req, res, next) => {
   res.status(error.code || 500);
   res.json({ message: error.message || "Unknown Error" });
 });
-
-app.listen(5000);
+mongoose.connect("mongodb://127.0.0.1:27017/posts")
+  .then(()=>{
+    app.listen(5000);
+    console.log("Connect To DATABASE");
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
