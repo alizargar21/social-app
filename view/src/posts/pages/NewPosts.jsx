@@ -1,11 +1,12 @@
 import React from "react";
-import { useReducer } from "react";
-import { useCallback } from "react";
+import http from "../../shared/services/http-service";
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
 import { useForm } from "../../shared/hooks/form-hooks";
 import Layout from "../../shared/layout/layout";
 import { validatorRequire } from "../../shared/utils/validators";
+import { createPost } from "../../shared/services/posts-services";
+import { useAuth } from "../../shared/Provider/AuthProvider";
 
 const NewPosts = () => {
   const [formState, inputHandler] = useForm(
@@ -21,15 +22,30 @@ const NewPosts = () => {
     },
     false
   );
-
-  const postSubmitHandler = (e) => {
+ const auth =    useAuth()
+ console.log(auth);
+  const postSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(formState);
+    const postDetails = {
+      title: formState.inputs.title.value,
+      description: formState.inputs.description.value,
+      creator : auth.userInfo.id
+    };
+    try {
+    const {data} =  await createPost(postDetails);
+    console.log(data)
+    } catch (err) {
+      console.log(err);
+    }
+    
   };
   return (
     <Layout>
-      <div className="min-w-[400px] h-auto bg-gray-100 border-black">
-        <form onSubmit={postSubmitHandler} className="flex  w-full h-auto flex-col justify-center items-center p-4">
+      <div className="h-auto min-w-[400px] border-black bg-gray-100">
+        <form
+          onSubmit={postSubmitHandler}
+          className="flex  h-auto w-full flex-col items-center justify-center p-4"
+        >
           <h2>Add Post</h2>
           <Input
             element="input"
@@ -39,7 +55,7 @@ const NewPosts = () => {
             placeholder="title"
             validators={[validatorRequire()]}
             onInput={inputHandler}
-            className="rounded p-2 text-md my-3"
+            className="text-md my-3 rounded p-2"
           />
           <Input
             id="description"
@@ -47,10 +63,14 @@ const NewPosts = () => {
             placeholder="description"
             validators={[validatorRequire()]}
             onInput={inputHandler}
-            className="rounded p-2 text-md my-3"
-
+            className="text-md my-3 rounded p-2"
           />
-          <Button type="submit" className="rounded cursor-pointer py-2 px-3 mt-2 bg-green-500 text-white font-semibold">Add Post</Button>
+          <Button
+            type="submit"
+            className="mt-2 cursor-pointer rounded bg-green-500 py-2 px-3 font-semibold text-white"
+          >
+            Add Post
+          </Button>
         </form>
       </div>
     </Layout>

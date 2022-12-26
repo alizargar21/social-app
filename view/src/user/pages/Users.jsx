@@ -5,7 +5,7 @@ import Layout from "../../shared/layout/layout";
 import http from "../../shared/services/http-service";
 import UserList from "../components/UserList";
 const Users = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState();
   const fetchUsers = async () => {
     const { data } = await http.get("/users");
     setUsers(data.users);
@@ -16,7 +16,7 @@ const Users = () => {
 
   return (
     <Layout>
-      <UserList items={users} />
+      {users && <UserList items={users} />}
     </Layout>
   );
 };

@@ -1,22 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
 import { useForm } from "../../shared/hooks/form-hooks";
 import Layout from "../../shared/layout/layout";
-import { useAuth, useAuthDispatcher } from "../../shared/Provider/AuthProvider";
+import { useAuth, useAuthActions } from "../../shared/Provider/AuthProvider";
 import { validatorRequire } from "../../shared/utils/validators";
-import {loginUser , signupUser} from "../../shared/services/authentication-service"
-import http from "../../shared/services/http-service";
-import axios from "axios";
+import {
+  loginUser,
+  signupUser,
+} from "../../shared/services/authentication-service";
+
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const auth = useAuth();
-  const setAuth = useAuthDispatcher();
+  const setAuth = useAuthActions();
 
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(auth);
@@ -27,45 +28,47 @@ const Auth = () => {
         value: "",
         isValid: false,
       },
-      email: {
+      password: {
         value: "",
-        isValid: "",
+        isValid: false,
       },
     },
     false
   );
-  const authSubmitHandler = async(e) => {
+  const authSubmitHandler = async (e) => {
     e.preventDefault();
-    if(isLoginMode){
+    if (isLoginMode) {
       try {
         const strData = {
           email: formState.inputs.email.value,
-          password : formState.inputs.password.value
-        }
-        const res = await loginUser(strData)
+          password: formState.inputs.password.value,
+        };
+        const res = await loginUser(strData);
         console.log(res);
-        setAuth({isLogin : true , user: strData});
-        console.log(auth);
-    navigate("/")
-
+        if (res) {
+          setAuth({ userInfo: res.data.user });
+        
+        }
+        navigate("/");
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }else {
+    } else {
       // with signup service
       try {
         const strData = {
-          name : formState.inputs.name.value,
+          name: formState.inputs.name.value,
           email: formState.inputs.email.value,
-          password : formState.inputs.password.value
+          password: formState.inputs.password.value,
+        };
+        const res = await signupUser(strData);
+        if (res) {
+          setAuth({  userInfo: res.data.user });
+         
         }
-        const {data} =  await signupUser(strData)
-          console.log(data)
-          setAuth(true);
-    navigate("/")
-
+        navigate("/");
       } catch (err) {
-         console.log(err);
+        console.log(err);
       }
       // with fetch methods =>
       // try {
@@ -85,11 +88,7 @@ const Auth = () => {
       // } catch (error) {
       //     throw new Error("faild signupppp")
       // }
-      
     }
-    
-    
-    
   };
   const switchModeHandler = () => {
     if (!isLoginMode) {

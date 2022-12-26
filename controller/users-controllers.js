@@ -28,7 +28,7 @@ const login = async (req, res, next) => {
     const error = new HttpError("Email or password is not correctly", 401);
     return next(error);
   }
-  res.json({ message: "logged in ..." });
+  res.json({ message: "logged in ..."  , user: existedUser.toObject({getters: true})});
 };
 
 const signup = async (req, res, next) => {
