@@ -8,9 +8,21 @@ const usersRoutes = require("./routes/users-routes")
 const app = express();
 //handle parse data from body with this middleware
 app.use(bodyParser.json());
+
+
+//handle cors error
+app.use((req, res, next)=>{
+  res.setHeader('Access-Control-Allow-Origin' , '*')
+  res.setHeader('Access-Control-Allow-Headers' , '*')
+  res.setHeader('Access-Control-Allow-Methods' , '*')
+  next()
+})
+
+
 //use api routes
 app.use("/api/posts", postsRoutes);
 app.use("/api/users", usersRoutes);
+
 
 //handle unknown routes
 app.use((req, res, next) => {

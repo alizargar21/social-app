@@ -1,15 +1,19 @@
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import Layout from "../../shared/layout/layout";
+import http from "../../shared/services/http-service";
 import UserList from "../components/UserList";
 const Users = () => {
-  const users = [
-    {
-      id: "u1",
-      name: "ali",
-      image: "",
-      postCount: 3,
-    },
-  ];
+  const [users, setUsers] = useState([]);
+  const fetchUsers = async () => {
+    const { data } = await http.get("/users");
+    setUsers(data.users);
+  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <Layout>
       <UserList items={users} />

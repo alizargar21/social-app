@@ -25,7 +25,7 @@ const login = async (req, res, next) => {
     return next(error);
   }
   if (!existedUser || existedUser.password !== password) {
-    const error = new HttpError("Invalid Inputs", 401);
+    const error = new HttpError("Email or password is not correctly", 401);
     return next(error);
   }
   res.json({ message: "logged in ..." });

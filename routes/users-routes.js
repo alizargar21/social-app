@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { check } = require("express-validator");
+const  {check}  = require("express-validator");
 
 const usersController = require("../controller/users-controllers");
 router.get("/", usersController.getUsers);
@@ -9,7 +9,7 @@ router.post(
   [
       check("name").isLength({ min: 3 }),
     check("email").normalizeEmail().isEmail(),
-    check("password").isLength({min:8})
+    check("password").isLength({min:4})
   ],
   usersController.signup
 );
