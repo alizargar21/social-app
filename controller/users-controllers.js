@@ -36,7 +36,7 @@ const signup = async (req, res, next) => {
   if (!errors.isEmpty()) {
     throw new HttpError("invalid inputs", 422);
   }
-  const { name, email, password, posts } = req.body;
+  const { name, email, password } = req.body;
 
   let existedUser;
   try {
@@ -53,7 +53,7 @@ const signup = async (req, res, next) => {
     name: name,
     email: email,
     password: password,
-    posts: posts,
+    posts: [],
     image: "url",
   });
   try {

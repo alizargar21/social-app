@@ -1,7 +1,7 @@
 const HttpError = require("../models/http-model");
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
-
+const User = require("../models/user")
 const getPostById = async (req, res, next) => {
   const postId = req.params.pid;
   let post;
@@ -49,8 +49,18 @@ const createPost = async (req, res, next) => {
     creator: creator,
     image: "url",
   });
+
+  let user 
+  try {
+  user =  await User.findById(creator)
+  } catch (err) {
+    const error = new HttpError("Could not find user", 500);
+    return next(error);
+  }
   try {
     await createdPost.save();
+    user.posts.push(createdPost)
+    await user.save()
   } catch (err) {
     const error = new HttpError("Creating Post Failed", 500);
     return next(error);
@@ -61,13 +71,21 @@ const createPost = async (req, res, next) => {
 
 
 const deletePost = async(req, res, next) => {
-  const postId = req.params.id;
+  const postId = req.params.pid;
   let post 
   try {
-      post = await Post.findOneAndRemove(postId)
+      post = await Post.findById(postId).populate("creator")
     
     } catch (err) {
-      const error = new HttpError("Could not find post", 500);
+      const error = new HttpError("Could not find post1", 500);
+      return next(error);
+    }
+    try {
+      await post.remove()
+      post.creator.posts.pull(post)
+      await post.creator.save()
+    } catch (err) {
+      const error = new HttpError("Could not find post2", 500);
       return next(error);
     }
   

@@ -25,7 +25,7 @@ app.use((error, req, res, next) => {
   res.status(error.code || 500);
   res.json({ message: error.message || "Unknown Error" });
 });
-mongoose.connect("mongodb://127.0.0.1:27017/posts")
+mongoose.connect("mongodb://127.0.0.1:27017/social-app")
   .then(()=>{
     app.listen(5000);
     console.log("Connect To DATABASE");
