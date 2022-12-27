@@ -54,7 +54,7 @@ const signup = async (req, res, next) => {
     email: email,
     password: password,
     posts: [],
-    image: "url",
+    image: req.file.path,
   });
   try {
     await createdUser.save();

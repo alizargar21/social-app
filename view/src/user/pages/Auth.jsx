@@ -11,7 +11,7 @@ import {
   loginUser,
   signupUser,
 } from "../../shared/services/authentication-service";
-
+import ImageUpload from "../../shared/components/FormElements/imageUpload";
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const auth = useAuth();
@@ -20,7 +20,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(auth);
+    
   }, [auth]);
   const [formState, inputHandler, setFromData] = useForm(
     {
@@ -37,6 +37,7 @@ const Auth = () => {
   );
   const authSubmitHandler = async (e) => {
     e.preventDefault();
+    console.log(formState.inputs);
     if (isLoginMode) {
       try {
         const strData = {
@@ -47,7 +48,6 @@ const Auth = () => {
         console.log(res);
         if (res) {
           setAuth({ userInfo: res.data.user });
-        
         }
         navigate("/");
       } catch (err) {
@@ -56,15 +56,23 @@ const Auth = () => {
     } else {
       // with signup service
       try {
-        const strData = {
-          name: formState.inputs.name.value,
-          email: formState.inputs.email.value,
-          password: formState.inputs.password.value,
-        };
-        const res = await signupUser(strData);
+
+        const formData = new FormData()
+
+        formData.append('name' , formState.inputs.name.value)
+        formData.append('email' , formState.inputs.email.value)
+        formData.append('image' , formState.inputs.image.value)
+        formData.append('password' , formState.inputs.password.value)
+
+        // const strData = {
+        //   name: formState.inputs.name.value,
+        //   email: formState.inputs.email.value,
+        //   password: formState.inputs.password.value,
+        //   image : formState.inputs.image.value
+        // };
+        const res = await signupUser(formData);
         if (res) {
-          setAuth({  userInfo: res.data.user });
-         
+          setAuth({ userInfo: res.data.user });
         }
         navigate("/");
       } catch (err) {
@@ -107,6 +115,10 @@ const Auth = () => {
             value: "",
             isValid: false,
           },
+          image: {
+            value: null,
+            isValid: false,
+          },
         },
         false
       );
@@ -128,6 +140,7 @@ const Auth = () => {
               onInput={inputHandler}
             />
           )}
+          {!isLoginMode && <ImageUpload id="image" onInput={inputHandler} />}
           <Input
             id="email"
             type="email"

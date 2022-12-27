@@ -1,3 +1,5 @@
+const fs = require("fs")
+const path = require("path")
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -8,7 +10,7 @@ const usersRoutes = require("./routes/users-routes");
 const app = express();
 //handle parse data from body with this middleware
 app.use(bodyParser.json());
-
+app.use('/uploads/images' , express.static(path.join('uploads' , 'images')))
 //handle cors error
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,6 +30,11 @@ app.use((req, res, next) => {
 });
 //error must be first argument
 app.use((error, req, res, next) => {
+  if(req.file){
+    fs.unLink(req.file.path , (err)=>{
+      console.log(err)
+    })
+  }
   if (res.headerSet) {
     return next(error);
   }
