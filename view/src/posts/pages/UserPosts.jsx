@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Layout from "../../shared/layout/layout";
-import { useAuth } from "../../shared/Provider/AuthProvider";
 import http from "../../shared/services/http-service";
 import PostList from "../components/PostList";
 

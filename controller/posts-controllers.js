@@ -47,7 +47,7 @@ const createPost = async (req, res, next) => {
     title: title,
     description: description,
     creator: creator,
-    image: "url",
+    image: req.file.path,
   });
 
   let user 

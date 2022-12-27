@@ -1,5 +1,5 @@
 import React from "react";
-import http from "../../shared/services/http-service";
+import ImageUpload from "../../shared/components/FormElements/imageUpload"
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
 import { useForm } from "../../shared/hooks/form-hooks";
@@ -19,6 +19,10 @@ const NewPosts = () => {
         value: "",
         isValid: false,
       },
+      image : {
+        value : null,
+        isValid : false
+      }
     },
     false
   );
@@ -26,13 +30,14 @@ const NewPosts = () => {
  console.log(auth);
   const postSubmitHandler = async (e) => {
     e.preventDefault();
-    const postDetails = {
-      title: formState.inputs.title.value,
-      description: formState.inputs.description.value,
-      creator : auth.userInfo.id
-    };
+    const formData =  new FormData()
+    formData.append('title', formState.inputs.title.value)
+    formData.append('description', formState.inputs.description.value)
+    formData.append('creator', auth.userInfo.id)
+    formData.append('image', formState.inputs.image.value)
+
     try {
-    const {data} =  await createPost(postDetails);
+    const {data} =  await createPost(formData);
     console.log(data)
     } catch (err) {
       console.log(err);
@@ -47,6 +52,7 @@ const NewPosts = () => {
           className="flex  h-auto w-full flex-col items-center justify-center p-4"
         >
           <h2>Add Post</h2>
+
           <Input
             element="input"
             id="title"
@@ -65,6 +71,7 @@ const NewPosts = () => {
             onInput={inputHandler}
             className="text-md my-3 rounded p-2"
           />
+          <ImageUpload id="image" onInput={inputHandler} errorText="choose a image"/>
           <Button
             type="submit"
             className="mt-2 cursor-pointer rounded bg-green-500 py-2 px-3 font-semibold text-white"
