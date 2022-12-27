@@ -1,6 +1,8 @@
 import React from "react";
+import { useEffect } from "react";
 import PostItem from "./PostItem";
 const PostList = (props) => {
+
   if (props.items.length === 0) {
     return (
       <div>
@@ -8,6 +10,7 @@ const PostList = (props) => {
       </div>
     );
   }
+
   return (
     <div>
       <ul>
@@ -20,6 +23,7 @@ const PostList = (props) => {
               title={post.title}
               description={post.description}
               creatorId={post.creator}
+              onDelete={props.onDelete}
             />
           );
         })}

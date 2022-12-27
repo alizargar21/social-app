@@ -8,26 +8,34 @@ import http from "../../shared/services/http-service";
 import PostList from "../components/PostList";
 
 const UserPosts = () => {
- const [posts , setPosts]=  useState([])
-   const userId =  useParams().userId
-   console.log(userId)
-    useEffect(()=> {
-      const fetchPosts = async() => {
-        try {
-           const res = await http.get(`/posts/user/${userId}`)
-          setPosts(res.data.userPost)
-          console.log(res.data.userPost);
-        } catch (err) {
-          console.log(err)
-        }
+  const [loadedPosts, setLoadedPosts] = useState([]);
+  const userId = useParams().userId;
+  console.log(userId);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await http.get(`/posts/user/${userId}`);
+        setLoadedPosts(res.data.userPost);
+        console.log(res.data.userPost);
+      } catch (err) {
+        console.log(err);
       }
-      fetchPosts()
-    }, [userId])
-    return (
-      <Layout >
-      {posts &&   <PostList items={posts} />}
-      </Layout>
-    );
+    };
+    fetchPosts();
+  }, [userId ]);
+
+  const deletePostHandler = (deletedPostId) => {
+    setLoadedPosts(prevPosts => (
+      prevPosts.filter((post) => post.id !== deletedPostId)
+    ));
+  };
+  return (
+    <Layout>
+      {loadedPosts && (
+        <PostList items={loadedPosts} onDelete={deletePostHandler} />
+      )}
+    </Layout>
+  );
 };
 
 export default UserPosts;
