@@ -2,7 +2,7 @@ const HttpError = require("../models/http-model");
 const { validationResult } = require("express-validator");
 const User = require("../models/user");
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcryptjs")
 const getUsers = async(req, res, next) => {
   let users
   try {
@@ -28,6 +28,19 @@ const login = async (req, res, next) => {
     const error = new HttpError("Email or password is not correctly", 401);
     return next(error);
   }
+
+  let isValidPassword = false
+  try {
+  isValidPassword =   await bcrypt.compare(password , existedUser.password)
+  } catch (err) {
+    const error = new HttpError("Could not login", 500);
+    return next(error);
+  }
+
+  if(isValidPassword){
+    const error = new HttpError("Invalid password", 401);
+    return next(error);
+  }
   res.json({ message: "logged in ..."  , user: existedUser.toObject({getters: true})});
 };
 
@@ -49,10 +62,18 @@ const signup = async (req, res, next) => {
     const error = new HttpError("User already exist", 422);
     return next(error);
   }
+  let hashedPassword
+try {
+  hashedPassword= await   bcrypt.hash(password , 12)
+} catch (err) {
+  const error = new HttpError("Could not create user", 500);
+  return next(error);
+}
+
   const createdUser = new User({
     name: name,
     email: email,
-    password: password,
+    password: hashedPassword,
     posts: [],
     image: req.file.path,
   });
