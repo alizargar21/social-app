@@ -10,6 +10,7 @@ const Users = () => {
     const { data } = await http.get("/users");
     setUsers(data.users);
   };
+  console.log(users);
   useEffect(() => {
     fetchUsers();
   }, []);

@@ -44,6 +44,7 @@ const Input = (props) => {
   const element =
     props.element === "input" ? (
       <input
+        autoComplete="off"
         id={props.id}
         type={props.type}
         value={inputState.value}

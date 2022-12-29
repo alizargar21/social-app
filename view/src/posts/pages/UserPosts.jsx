@@ -1,27 +1,37 @@
 import React from "react";
+import { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+
 import Layout from "../../shared/layout/layout";
-import http from "../../shared/services/http-service";
+
 import PostList from "../components/PostList";
+import { useHttpClient } from '../../shared/hooks/http-hook'
 
 const UserPosts = () => {
   const [loadedPosts, setLoadedPosts] = useState([]);
-  const userId = useParams().userId;
-  console.log(userId);
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await http.get(`/posts/user/${userId}`);
-        setLoadedPosts(res.data.userPost);
-        console.log(res.data.userPost);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchPosts();
-  }, [userId ]);
+  const { sendRequest } = useHttpClient()
+
+    const userId = useParams().userId
+
+    useEffect(() => {
+
+        const fetchPosts = async () => {
+            try {
+                const responseData = await sendRequest(
+                    `http://localhost:5000/api/posts/user/${userId}`
+                )
+                console.log(responseData.userPost)
+                setLoadedPosts(responseData.userPost)
+            } catch (err) {
+              console.log(err);
+            }
+        }
+
+        fetchPosts()
+        console.log(loadedPosts);
+    }, [sendRequest, userId])
 
   const deletePostHandler = (deletedPostId) => {
     setLoadedPosts(prevPosts => (

@@ -1,9 +1,15 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { useLocation } from "react-router-dom";
 import Button from "../../shared/components/FormElements/Button";
+import { AuthContext } from "../../shared/context/auth-context";
 import { deletePost } from "../../shared/services/posts-services";
 const PostItem = ({ image, description, title, creator ,id,onDelete }) => {
- const deleteHandler =async ()=> {
+const {token , userId} = useContext(AuthContext)
+console.log(token)
+const location = useLocation()
+
+  const deleteHandler =async ()=> {
 try {
   const res = await deletePost(`/posts/${id}`)
   onDelete(id)
@@ -14,21 +20,21 @@ try {
 
  }
   return (
-    <li>
-      <div>
-        <img src={`http://localhost:5000/${image}`} alt={title} />
+    <li className=" flex flex-col justify-start items-center">
+      <div className="min-w-[300px] flex items-center flex-col">
+        <img src={`http://localhost:5000/${image}`} className="w-[60%]  h-auto rounded" alt={title} />
       </div>
       <div>
         <h2>{title}</h2>
         <p>{description}</p>
         <p>{creator}</p>
       </div>
-      <Button
+     {token&& location.pathname !== "/" && location.pathname !== `/${userId}/posts` &&  <Button
         className="mt-2 cursor-pointer rounded bg-green-500 py-2 px-3 font-semibold text-white"
         onClick={deleteHandler}
       >
-        Delete
-      </Button>
+        Delete Post
+      </Button>}
     </li>
   );
 };

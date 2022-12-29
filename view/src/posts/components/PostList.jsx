@@ -12,8 +12,8 @@ const PostList = (props) => {
   }
 
   return (
-    <div>
-      <ul>
+    <div className="bg-blue-200 flex flex-col p-12 items-center">
+      <ul className="flex flex-col justify-center items-center">
         {props.items.map((post) => {
           return (
             <PostItem

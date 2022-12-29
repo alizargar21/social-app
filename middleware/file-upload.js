@@ -18,7 +18,7 @@ const fileUpload = multer({
   }),
   fileFilter: (req, file, cb) => {
     const isValid = !!type[file.mimetype];
-    const err =    isValid ? null : new Error ('Invalid format')
+    let err =    isValid ? null : new Error ('Invalid format')
     cb( err ,isValid)
   },
 });

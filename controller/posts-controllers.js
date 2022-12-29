@@ -2,6 +2,16 @@ const HttpError = require("../models/http-model");
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 const User = require("../models/user")
+const getAllPosts = async (req , res , next) => {
+  let posts
+  try {
+  posts = await Post.find({})
+  } catch (err) {
+    const error =  new HttpError ("could not find any posts" , 500)
+    next(error)
+  }
+  res.json({posts : posts})
+}
 const getPostById = async (req, res, next) => {
   const postId = req.params.pid;
   let post;
@@ -40,14 +50,15 @@ const getPostByUserId =async (req, res, next) => {
 const createPost = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError("Invalid Inputs", 422);
+   throw new HttpError("Invalid Inputs", 422);
+    
   }
   const { title, description, creator } = req.body;
   const createdPost = new Post({
     title: title,
     description: description,
-    creator: creator,
     image: req.file.path,
+    creator: creator
   });
 
   let user 
@@ -57,6 +68,10 @@ const createPost = async (req, res, next) => {
     const error = new HttpError("Could not find user", 500);
     return next(error);
   }
+  if (!user) {
+    const error = new HttpError('Could not find user', 422)
+    return next(error)
+}
   try {
     await createdPost.save();
     user.posts.push(createdPost)
@@ -93,6 +108,7 @@ const deletePost = async(req, res, next) => {
 };
 
 exports.getPostById = getPostById;
+exports.getAllPosts = getAllPosts;
 exports.getPostByUserId = getPostByUserId;
 exports.createPost = createPost;
 exports.deletePost = deletePost;

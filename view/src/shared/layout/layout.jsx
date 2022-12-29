@@ -5,6 +5,7 @@ const Layout = ({ children }) => {
     <>
       <MainNavigation />
       <main className="flex w-[80%] items-center justify-center mx-auto my-5">
+        
         {children}
       </main>
     </>
